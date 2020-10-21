@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let pool = require('../db/db');
-
+const getLeaderboards = require('../functions/getLeaderboards');
 
 
 function createContest(req,res) {
@@ -237,6 +237,7 @@ function getContestLeaguesByID(req, res){
   })
 }
 
+
 router.post('/create', function(req, res) { 
   createContest(req, res);
 });
@@ -265,5 +266,8 @@ router.get('/contestLeagues/byID', function(req, res) {
   getContestLeaguesByID(req, res);
 });
 
-
+router.get('/leaderboards', async function(req, res) { 
+  let leaderboards = await getLeaderboards(req.query.id);
+  res.send(leaderboards);
+});
 module.exports = router;

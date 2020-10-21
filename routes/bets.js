@@ -81,10 +81,8 @@ router.get('/byEntry', function(req, res) {
   getBetsByEntry(req, res);
 });
 
-
 router.post('/create', function(req, res) { 
     createBets(req, res);
 });
-  
 
 module.exports = router;
