@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let pool = require('../db/db');
+const settlePersonalBets = require('../utils/settleBets/settlePersonalBets');
 
 function getContestFixturesByLeagues(req, res){
   pool.getConnection(function(err, connection){
@@ -104,6 +105,37 @@ function getContestFixturesByLeagues(req, res){
   })
 }
 
+function updateResults(req,res) {
+  pool.getConnection(function(err, connection){
+      if(err) {
+          connection.release();
+          res.json({"code": 100, "status": "Error in database connection"});
+          return;
+      }else{
+        //insert bet record
+        let betSql ="UPDATE history_fixtures SET jsonFixture = JSON_INSERT(jsonFixture, '$.results', ?) WHERE intFixtureID = ?;"
+        let betValues = [JSON.stringify(req.body.results), req.body.fixt_id];
+        connection.query(betSql, betValues, function(err, result){
+            if(err) {
+              connection.release();
+              res.json({"code": 400, "status": "Error creating new resource(s)"});
+            }else{
+              connection.release();  
+              res.json({"code": 201, "status": "New resource(s) have been created"});
+              settlePersonalBets(req.body.fixt_id, req.body.results);
+            }
+        });
+      }
+
+
+
+      connection.on('error', function(err){
+          connection.release();
+          res.json({"code": 100, "status": "Error in database connection"});
+      })
+  })
+};
+
 function getOddsByFixtures(req, res){
   pool.getConnection(function(err, connection){
     if(err) {
@@ -168,11 +200,82 @@ function getFixtureByID(req, res){
   })
 }
 
+function getBook(req, res){
+  pool.getConnection(function(err, connection){
+    if(err) {
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+      return;
+    }
+    console.log("connected as id: " + connection.threadId);
+
+    let sql = "SELECT * FROM current_fixtures";
+
+    connection.query(sql, function(err, rows) {
+      connection.release();
+      if(!err) {
+        let formatted = [];
+        rows.forEach(row=>{
+          let obj = {
+            fixture_id : row.intFixtureID,
+            fixture : JSON.parse(row.jsonFixture)
+          }
+          formatted.push(obj);
+        })
+        res.json(formatted)
+      }else{
+        console.log(err)
+      }
+    });    
+    
+    connection.on('error', function(err){
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+    })
+  })
+}
+
+function getNeedResults(req, res){
+  pool.getConnection(function(err, connection){
+    if(err) {
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+      return;
+    }
+    console.log("connected as id: " + connection.threadId);
+
+    let sql = 'SELECT * FROM history_fixtures WHERE JSON_EXTRACT(jsonFixture, "$.results") IS NULL';
+
+    connection.query(sql, function(err, rows) {
+      connection.release();
+      if(!err) {
+        let formatted = [];
+        rows.forEach(row=>{
+          let obj = {
+            fixture_id : row.intFixtureID,
+            fixture : JSON.parse(row.jsonFixture)
+          }
+          formatted.push(obj);
+        })
+        res.json(formatted)
+      }else{
+        console.log(err)
+      }
+    });    
+    
+    connection.on('error', function(err){
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+    })
+  })
+}
 router.post('/byLeagues/withTimeFrame', function(req, res) { 
   getContestFixturesByLeagues(req, res);
 });
 
-router.post('/byContest')
+router.post('/updateResults', function(req, res) { 
+  updateResults(req, res);
+});
 
 router.post('/odds/byFixtures', function(req, res) { 
   getOddsByFixtures(req, res);
@@ -180,6 +283,14 @@ router.post('/odds/byFixtures', function(req, res) {
 
 router.get('/byID', function(req, res) { 
   getFixtureByID(req, res);
+});
+
+router.get('/getBook', function(req, res) { 
+  getBook(req, res);
+});
+
+router.get('/needResults', function(req, res) { 
+  getNeedResults(req, res);
 });
 
 module.exports = router;

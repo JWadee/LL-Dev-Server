@@ -9,6 +9,7 @@ const checkExists = require('./services/fixtures');
 const checkFixtures = require('./services/fixtureResults/soccerFixtureResults');
 const checkUpcoming = require('./bet365/services/monitorUpcomingFixtures');
 const monitorInplayFixtures = require('./bet365/services/monitorInPlayFixtures');
+const monitorBook = require('./theOdds/monitorBook');
 
 //routes 
 const accountsRouter = require('./routes/accounts');
@@ -27,18 +28,6 @@ if (!authConfig.domain || !authConfig.audience) {
     "Please make sure that auth_config.json is in place and populated"
   );
 }
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "*"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
-  );
-  next();
-});
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -73,10 +62,11 @@ app.use('/sports', sportsRouter);
 
 
 //Cron jobs 
-checkContests();
+// checkContests();
 // checkExists();
-checkFixtures();
-checkUpcoming();
-monitorInplayFixtures();
+// checkFixtures();
+// checkUpcoming();
+// monitorInplayFixtures();
+monitorBook();
 
 module.exports = app;

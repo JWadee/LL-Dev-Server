@@ -4,12 +4,11 @@
 const formatBets = (records) => {
     const formatted = [];
     records.forEach(record => {
-        const index = formatted.map(bet => bet.id).indexOf(record.intContestBetID);
+        const index = formatted.indexOf(bet => bet.intBet === record.intBetID);
         if(index === -1){
             let bet = JSON.parse(record.jsonBet)
             bet.legs = [];
             bet.legs.push(JSON.parse(record.jsonLeg));
-            
             formatted.push(bet)
         //Need functionality to add leg to existing bet
         }else{
