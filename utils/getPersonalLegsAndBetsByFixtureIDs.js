@@ -9,7 +9,7 @@ const sequelize = new Sequelize('Lineleaders', 'admin', 'LLsredael321?', {
 
 
 //Function to get bet legs by fixture id, format the legs, and send them to be settled
-const getLegsAndBetsByFixtureIDs = async (ids) =>{
+const getPersonalLegsAndBetsByFixtureIDs = async (ids) =>{
  
     const [rows, metaData] = await sequelize.query(
         "SELECT legs.intLegID, legs.intBetID, legs.jsonLeg, bets.jsonBet FROM personal_bet_legs AS legs "+
@@ -29,4 +29,4 @@ const getLegsAndBetsByFixtureIDs = async (ids) =>{
     })
     return(legs);
 }
-module.exports = getLegsAndBetsByFixtureIDs;
+module.exports = getPersonalLegsAndBetsByFixtureIDs;
