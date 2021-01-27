@@ -1,5 +1,4 @@
 var express = require('express');
-const { json } = require('sequelize/types');
 var router = express.Router();
 let pool = require('../db/db');
 
