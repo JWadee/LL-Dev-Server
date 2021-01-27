@@ -10,6 +10,8 @@ const checkFixtures = require('./services/fixtureResults/soccerFixtureResults');
 const checkUpcoming = require('./bet365/services/monitorUpcomingFixtures');
 const monitorInplayFixtures = require('./bet365/services/monitorInPlayFixtures');
 const monitorBook = require('./theOdds/monitorBook');
+const reconcile = require('./utils/settleBets/reconcileBets');
+const checkSports = require('./theOdds/checkSportAndLeagues');
 
 //routes 
 const accountsRouter = require('./routes/accounts');
@@ -67,6 +69,10 @@ app.use('/sports', sportsRouter);
 // checkFixtures();
 // checkUpcoming();
 // monitorInplayFixtures();
+
+
+// reconcile();
 monitorBook();
+// checkSports();
 
 module.exports = app;

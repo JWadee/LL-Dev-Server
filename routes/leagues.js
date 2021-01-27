@@ -1,4 +1,5 @@
 var express = require('express');
+const { json } = require('sequelize/types');
 var router = express.Router();
 let pool = require('../db/db');
 
@@ -18,7 +19,15 @@ function getAllLeagues(req, res){
     connection.query(sql, function(err, rows) {
       connection.release();
       if(!err) {
-        res.json(rows)   
+        let leagues = [];
+        rows.forEach(league => {
+          leagues.push({
+            intLeagueID : league.intLeagueID,
+            intSportID : league.intSportID,
+            jsonLeague : JSON.parse(league.jsonLeague)
+          })
+        });
+        res.json(leagues)   
       }else{
         console.log(err)
       }
