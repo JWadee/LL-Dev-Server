@@ -244,7 +244,10 @@ function getNeedResults(req, res){
     }
     console.log("connected as id: " + connection.threadId);
 
-    let sql = 'SELECT * FROM history_fixtures WHERE JSON_EXTRACT(jsonFixture, "$.results") IS NULL';
+    let sql = 'SELECT * FROM history_fixtures WHERE JSON_EXTRACT(jsonFixture, "$.results") IS NULL AND EXISTS '+
+              '(SELECT * FROM personal_bets AS pb '+
+              'INNER JOIN personal_bet_legs AS pbl ON pb.intBetID = pbl.intBetID '+
+              'WHERE JSON_EXTRACT(jsonLeg, "$.fixture.fixtureID") = history_fixtures.intFixtureID)';
 
     connection.query(sql, function(err, rows) {
       connection.release();
