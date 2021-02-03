@@ -106,7 +106,7 @@ const settlePersonalBets = async(fixtID) => {
 
 // Export Cron job to monitor inplay fixtures 
 const reconcile = async() => cron.schedule('*/1 * * * *', async () => {
-    settlePersonalBets(585)
+    settlePersonalBets(1826)
 });
   
 module.exports = reconcile;

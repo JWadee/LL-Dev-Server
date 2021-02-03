@@ -95,7 +95,7 @@ function getOpenContests(req, res){
     }
     console.log("connected as id: " + connection.threadId);
 
-    let sql = "SELECT c.*, l.strLeagueName, cl.intLeagueID, ct.strContestType FROM contests AS c "+
+    let sql = "SELECT c.*, JSON_EXTRACT(l.jsonLeague, '$.title'), cl.intLeagueID, ct.strContestType FROM contests AS c "+
               "INNER JOIN contest_types AS ct ON ct.intContestTypeID = c.intContestTypeID "+
               "INNER JOIN contest_leagues AS cl ON cl.intContestID = c.intContestID "+
               "INNER JOIN leagues AS l on l.intLeagueID = cl.intLeagueID "+

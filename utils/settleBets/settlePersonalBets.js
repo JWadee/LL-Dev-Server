@@ -24,8 +24,8 @@ const settlePersonalBets = async(fixtID, results) => {
     let legs = await getPersonalLegsAndBetsByFixtureIDs(fixtID);
     legs.forEach(leg=>{
         //get the home and away scores
-        let homeScore = results.home_score;
-        let awayScore = results.away_score;
+        let homeScore = parseFloat(results.home_score);
+        let awayScore = parseFloat(results.away_score);
         let result;
         
         //settle spread bet
@@ -73,19 +73,19 @@ const settlePersonalBets = async(fixtID, results) => {
         //settle total bet
         }else if(leg.leg.line.type === "Total"){
             if(leg.leg.line.bet === "Over"){
-                if(homeScore + awayScore > leg.leg.line.line){
+                if(homeScore + awayScore > parseFloat(leg.leg.line.line)){
                     result = "W";                 
-                }else if(homeScore + awayScore < leg.leg.line.line){
+                }else if(homeScore + awayScore < parseFloat(leg.leg.line.line)){
                     result = "L";                 
-                }else if(homeScore + awayScore === leg.leg.line.line){
+                }else if(homeScore + awayScore === parseFloat(leg.leg.line.line)){
                     result = "P";                 
                 }
             }else if(leg.leg.line.bet === "Under"){
-                if(homeScore + awayScore < leg.leg.line.line){
+                if(homeScore + awayScore < parseFloat(leg.leg.line.line)){
                     result = "W";                 
-                }else if(homeScore + awayScore > leg.leg.line.line){
+                }else if(homeScore + awayScore > parseFloat(leg.leg.line.line)){
                     result = "L";                 
-                }else if(homeScore + awayScore === leg.leg.line.line){
+                }else if(homeScore + awayScore === parseFloat(leg.leg.line.line)){
                     result = "P";                 
                 }
             }
