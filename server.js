@@ -64,7 +64,7 @@ app.use('/sports', sportsRouter);
 
 
 //Cron jobs 
-// checkContests();
+checkContests();
 // checkExists();
 // checkFixtures();
 // checkUpcoming();
