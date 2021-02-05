@@ -23,6 +23,10 @@ fixture.init({
   jsonFixture: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  dtmStart: {
+    type: DataTypes.DATE,
+    allowNull: false
   }
 }, {
   // Options
@@ -59,6 +63,7 @@ const createFixtures = (fixtures)=>{
     fixtures.forEach(fixture =>{
       let record = {
         jsonFixture: JSON.stringify(fixture),
+        dtmStart: formatUTC(fixture.commence_time)
       }
       records.push(record)
     })
@@ -74,7 +79,8 @@ const moveFixturesToHistory= async(fixtures) =>{
     fixtures.forEach(fixture =>{
         let record = {
             intFixtureID: fixture.intFixtureID, 
-            jsonFixture: JSON.stringify(fixture.jsonFixture)
+            jsonFixture: JSON.stringify(fixture.jsonFixture),
+            dtmStart: fixture.dtmStart
         }
         records.push(record);
         ids.push(fixture.intFixtureID)

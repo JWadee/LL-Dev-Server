@@ -216,7 +216,7 @@ function getContestLeaguesByID(req, res){
     }
     console.log("connected as id: " + connection.threadId);
 
-    let sql = "SELECT cl.intLeagueID, l.strLeagueName FROM contest_leagues AS cl "+
+    let sql = "SELECT cl.intLeagueID, l.jsonLeague FROM contest_leagues AS cl "+
               "INNER JOIN leagues as l ON cl.intLeagueID = l.intLeagueID "+
               "WHERE cl.intContestID = ?;";
               
