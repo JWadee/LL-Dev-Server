@@ -89,19 +89,33 @@ league.init({
 //Function to create fixture records 
 const createFixtures = async(fixtures)=>{
     let leagues = await fetchLeagues();
-
     //create fixture records
     let records = [];
     fixtures.forEach(fixture =>{
+        //find league 
         let leagIndex = leagues.findIndex(leag=>leag.jsonLeague.key == fixture.sport_key)
-        let leagueID = leagues[leagIndex].intLeagueID;
 
-        let record = {
-            jsonFixture: JSON.stringify(fixture),
-            dtmStart: formatUTC(fixture.commence_time),
-            intLeagueID: leagueID
+        //add league id if index is existing
+        if(leagIndex != -1){
+            let leagueID = leagues[leagIndex].intLeagueID;  
+
+            let rec = {
+                jsonFixture: JSON.stringify(fixture),
+                dtmStart: formatUTC(fixture.commence_time),
+                intLeagueID: leagueID
+            }
+            records.push(rec)
+        }//else leave league id blank
+        else{
+            let record = {
+                jsonFixture: JSON.stringify(fixture),
+                dtmStart: formatUTC(fixture.commence_time),
+            }
+
+            records.push(record)
+
         }
-        records.push(record)
+
     })
     fixture.bulkCreate([...records]);
 }
