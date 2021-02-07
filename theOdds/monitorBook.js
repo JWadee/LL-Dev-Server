@@ -28,6 +28,9 @@ fixture.init({
   dtmStart: {
     type: DataTypes.DATE,
     allowNull: false
+  }, 
+  intLeagueID:{
+      type: DataTypes.INTEGER
   }
 }, {
   // Options
@@ -48,6 +51,9 @@ historyFixt.init({
   jsonFixture: {
     type: DataTypes.STRING,
     allowNull: false
+  }, 
+  intLeagueID:{
+      type: DataTypes.INTEGER
   }
 }, {
   // Options
@@ -56,17 +62,46 @@ historyFixt.init({
   timestamps: false,
 });
 
+//Create sport data model 
+class league extends Model {}
+league.init({
+  // Model attributes are defined here
+  intLeagueID: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  intSportID:{
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  jsonLeague: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+}, {
+  // Options
+  sequelize, 
+  modelName: 'league',
+  timestamps: false,
+});
 
 //Function to create fixture records 
 const createFixtures = (fixtures)=>{
+    let leagues = await fetchLeagues();
+
     //create fixture records
     let records = [];
     fixtures.forEach(fixture =>{
-      let record = {
-        jsonFixture: JSON.stringify(fixture),
-        dtmStart: formatUTC(fixture.commence_time)
-      }
-      records.push(record)
+        let leagIndex = leagues.findIndex(leag=>leag.jsonLeague.key == fixture.sport_key)
+        let leagueID = leagues[leagIndex].intLeagueID;
+
+        let record = {
+            jsonFixture: JSON.stringify(fixture),
+            dtmStart: formatUTC(fixture.commence_time),
+            intLeagueID: leagueID
+        }
+        records.push(record)
     })
     fixture.bulkCreate([...records]);
 }
@@ -81,7 +116,8 @@ const moveFixturesToHistory= async(fixtures) =>{
         let record = {
             intFixtureID: fixture.intFixtureID, 
             jsonFixture: JSON.stringify(fixture.jsonFixture),
-            dtmStart: fixture.dtmStart
+            dtmStart: fixture.dtmStart,
+            intLeagueID: fixture.intLeagueID
         }
         records.push(record);
         ids.push(fixture.intFixtureID)
@@ -278,6 +314,18 @@ const fetchBook = async() => {
     return book;
 }
 
+const fetchLeagues = async() =>{
+    //get sports from database
+    let res = await league.findAll();
+    let leagues = [];
+    
+    res.forEach(leag=> {
+        leagues.push(leag.dataValues)
+    })
+
+    return leagues;
+}
+
 //Function to check whether fixtures need moved to history, updated in current, or added to history
 const checkArrays = (book, current_stored) => {
     let moveToHistory = [];
@@ -333,6 +381,7 @@ const checkArrays = (book, current_stored) => {
 const monitorBook = () => cron.schedule('*/15 * * * *', async () => {
     let book = await fetchBook(); 
     let current_stored = await getCurrentFixtures();
+
     //compare arrays and perform necessary tasks
     checkArrays(book, current_stored);
 });
