@@ -87,7 +87,7 @@ league.init({
 });
 
 //Function to create fixture records 
-const createFixtures = (fixtures)=>{
+const createFixtures = async(fixtures)=>{
     let leagues = await fetchLeagues();
 
     //create fixture records
