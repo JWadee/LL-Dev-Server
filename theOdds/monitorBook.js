@@ -4,6 +4,7 @@ const getCurrentFixtures =  require('../utils/getCurrentFixtures');
 const { Sequelize, DataTypes, Model} = require('sequelize');
 const findMedian = require('../utils/median');
 const compareProperties = require('../utils/compareObjProperties');
+const formatUTC = require('../utils/formatUTC');
 
 //Initialize Sequelize
 const sequelize = new Sequelize('Lineleaders', 'admin', 'LLsredael321?', {
