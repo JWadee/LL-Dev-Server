@@ -13,7 +13,7 @@ function getContestFixturesByLeagues(req, res){
     console.log("connected as id: " + connection.threadId);
     //Retrieve fixtures
 
-    let fixturesSQL = "SELECT * FROM current_fixtures AS cf WHERE intLeagueID IN (?) AND cf.fixtures.dtmStart >= CAST(? AS DATETIME) AND cf.dtmStart <= CAST(? AS DATETIME)";
+    let fixturesSQL = "SELECT * FROM current_fixtures AS cf WHERE cf.intLeagueID IN (?) AND cf.dtmStart >= CAST(? AS DATETIME) AND cf.dtmStart <= CAST(? AS DATETIME)";
     let leagueIDs = req.body.leagueIDs;
     let start = req.body.start;
     let end = req.body.end;
