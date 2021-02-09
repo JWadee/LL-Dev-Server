@@ -19,80 +19,18 @@ function getContestFixturesByLeagues(req, res){
     let end = req.body.end;
     let vals = [leagueIDs,start,end];
 
-    console.log(fixturesSQL);
-
     connection.query(fixturesSQL, vals, function(err, rows) {
       if(!err) {
-        //Filter fixtures into League fixtures object
-        const fixtures = rows.map(fixture=>{
-          //check for if League Fixtures object exists yet
-          return (JSON.parse(fixture.jsonFixture))
-        })
-
-        //parse fixtures by league
-        let leagueFixts = [];
-        fixtures.forEach(fixture =>{
-          let exists = leagueFixts.findIndex(league => league.leagueID === fixture.league.id)
-          if(exists > -1){
-            let tmp = leagueFixts[exists].fixtures;
-            tmp.push(fixture)
-            leagueFixts[exists].fixtures = tmp;
-          }else{
-            leagueFixts.push({
-              leagueID: fixture.league.id, 
-              fixtures:[fixture]
-            })
+        let formatted = [];
+        rows.forEach(row=>{
+          let obj = {
+            fixture_id : row.intFixtureID,
+            fixture : JSON.parse(row.jsonFixture),
+            league_id : row.intLeagueID
           }
+          formatted.push(obj);
         })
-
-        //Array to hold fixture IDs
-        let fixtureIDs = [];
-        
-        //Get fixture ids to query odds 
-        leagueFixts.forEach(league=>{
-          league.fixtures.forEach(fixture=>{
-            //add fixture id to array
-            fixtureIDs.push(parseInt(fixture.id));
-          });
-        });
-
-        //if any fixtures are returned fetch odds
-        if(fixtureIDs.length > 0){
-          //Retrieve odds for fixtures
-          let oddsSQL = "SELECT * FROM fixture_odds WHERE intFixtureID IN (?)";
-
-          connection.query(oddsSQL, [fixtureIDs], function(err, odds) {
-            connection.release();
-            if(!err) {
-              //Need to parse so JSON is not getting double parsed
-              const parsedOdds = odds.map(obj => {
-                  const tmp = {}
-                  tmp.oddsID = obj.intFixtureOddsID
-                  tmp.fixtureID = obj.intFixtureID
-                  tmp.odds = JSON.parse(obj.jsonOdds) // double-encoded field
-                  return tmp;
-              })
-
-              //Add odds to fixtures objects
-              leagueFixts.forEach(league=>{
-                league.fixtures.forEach(fixture=>{
-                  let index = parsedOdds.findIndex(odds => parseInt(odds.fixtureID) === parseInt(fixture.id));
-                  if(index > -1){
-                    fixture.oddsID = parsedOdds[index].oddsID
-                    fixture.odds = parsedOdds[index].odds
-                  }
-                });
-              });
-              res.send(leagueFixts) 
-            }else{
-              console.log(err)
-            }
-          });
-        }else{
-          res.send(leagueFixts)
-          connection.release();
-        }
-    
+        res.json(formatted)
       }else{
         console.log(err)
       }
@@ -218,7 +156,8 @@ function getBook(req, res){
         rows.forEach(row=>{
           let obj = {
             fixture_id : row.intFixtureID,
-            fixture : JSON.parse(row.jsonFixture)
+            fixture : JSON.parse(row.jsonFixture),
+            league_id : row.intLeagueID
           }
           formatted.push(obj);
         })
