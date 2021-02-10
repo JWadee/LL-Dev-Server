@@ -24,9 +24,9 @@ function getContestFixturesByLeagues(req, res){
         let formatted = [];
         rows.forEach(row=>{
           let obj = {
-            fixture_id : row.intFixtureID,
-            fixture : JSON.parse(row.jsonFixture),
-            league_id : row.intLeagueID
+            intFixtureID : row.intFixtureID,
+            jsonFixture : JSON.parse(row.jsonFixture),
+            intLeagueID : row.intLeagueID
           }
           formatted.push(obj);
         })

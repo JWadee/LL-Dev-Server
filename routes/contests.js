@@ -216,15 +216,23 @@ function getContestLeaguesByID(req, res){
     }
     console.log("connected as id: " + connection.threadId);
 
-    let sql = "SELECT cl.intLeagueID, l.jsonLeague FROM contest_leagues AS cl "+
+    let sql = "SELECT cl.intLeagueID, l.jsonLeague, l.intSportID FROM contest_leagues AS cl "+
               "INNER JOIN leagues as l ON cl.intLeagueID = l.intLeagueID "+
               "WHERE cl.intContestID = ?;";
               
     let id = req.query.id;
-    connection.query(sql, id, function(err, row) {
+    connection.query(sql, id, function(err, rows) {
       connection.release();
       if(!err) {
-        res.json(row)   
+        let leagues = [];
+        rows.forEach(league=>{
+          leagues.push({
+            intLeagueID: league.intLeagueID,
+            intSportID: league.intSportID,
+            jsonLeague: JSON.parse(league.jsonLeague)
+          })
+        })
+        res.json(leagues)   
       }else{
         console.log(err)
       }
