@@ -86,8 +86,8 @@ function createContestBets(req,res) {
                     }else{
                         //get bet id and insert bet leg record 
                         let betID = result.insertId
-                        let legSql = "INSERT INTO contest_bet_legs (intBetID, intFixtureRefID, jsonLeg) VALUES (?,?,?);";
-                        let legValues = [betID, bet.leg.fixture.fixtureID,  JSON.stringify(bet.leg)];
+                        let legSql = "INSERT INTO contest_bet_legs (intBetID, jsonLeg) VALUES (?,?);";
+                        let legValues = [betID, JSON.stringify(bet.leg)];
                         connection.query(legSql, legValues, function(err, result){
                             if(err){
                               res.json({"code": 400, "status": "Error creating new resource(s)"});
