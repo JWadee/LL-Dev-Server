@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 let pool = require('../db/db');
 const settlePersonalBets = require('../utils/settleBets/settlePersonalBets');
+const settleContestBets = require('../utils/settleBets/settleContestBets');
 
 function getContestFixturesByLeagues(req, res){
   pool.getConnection(function(err, connection){
@@ -61,6 +62,7 @@ function updateResults(req,res) {
               connection.release();  
               res.json({"code": 201, "status": "New resource(s) have been created"});
               settlePersonalBets(req.body.fixt_id, req.body.results);
+              settleContestBets(req.body.fixt_id, req.body.results);
             }
         });
       }
