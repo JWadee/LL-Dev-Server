@@ -186,6 +186,10 @@ function getNeedResults(req, res){
     let sql = 'SELECT * FROM history_fixtures WHERE JSON_EXTRACT(jsonFixture, "$.results") IS NULL AND EXISTS '+
               '(SELECT * FROM personal_bets AS pb '+
               'INNER JOIN personal_bet_legs AS pbl ON pb.intBetID = pbl.intBetID '+
+              'WHERE JSON_EXTRACT(jsonLeg, "$.fixture.fixtureID") = history_fixtures.intFixtureID) '+
+              'OR JSON_EXTRACT(jsonFixture, "$.results") IS NULL AND EXISTS '+
+              '(SELECT * FROM contest_bets AS cb '+
+              'INNER JOIN contest_bet_legs AS cbl ON cb.intContestBetID = cbl.intBetID '+
               'WHERE JSON_EXTRACT(jsonLeg, "$.fixture.fixtureID") = history_fixtures.intFixtureID)';
 
     connection.query(sql, function(err, rows) {
