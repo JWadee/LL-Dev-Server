@@ -21,7 +21,7 @@ const updateLegRecord = async(leg)=>{
 
 //Function to settle bets after results have been added to fixture  
 const settleContestBets = async(fixtID, results) => {
-    let legs = await getPersonalLegsAndBetsByFixtureIDs(fixtID);
+    let legs = await getContestLegsAndBetsByFixtureIDs(fixtID);
     legs.forEach(leg=>{
         //get the home and away scores
         let homeScore = parseFloat(results.home_score);
