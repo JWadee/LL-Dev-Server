@@ -61,19 +61,19 @@ const formatLeaderboards = (players, bets) => {
             //update bankroll and record vars
             if(bet.jsonBet.result === "W" ){
                 let win;
-                let odds = parseFloat(bet.odds);
+                let odds = parseFloat(bet.jsonBet.odds);
                 let wager = parseFloat(bet.jsonBet.wager);
-                if(bet.jsonBet.odds > 0){
+                if(odds > 0){
                     let dec = odds/100;
-                    win = parseFloat(wager * dec)
+                    win = wager * dec
                 }else{
                     let dec = Math.abs(odds)/100;
-                    win = parseFloat(wager / dec)
+                    win = wager / dec;
                 };
                 bankroll = bankroll +  win;
                 w = w + 1; 
             }else if(bet.jsonBet.result === "L" ){
-                bankroll = bankroll - parseFloat(bet.jsonBet.wager);
+                bankroll = bankroll - wager;
                 l = l + 1;
             }else if(bet.jsonBet.result === "P" ){
                 p = p + 1;
