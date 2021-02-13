@@ -59,10 +59,11 @@ const formatLeaderboards = (players, bets) => {
 
         playerBets.forEach(bet=>{
             //update bankroll and record vars
+            let wager = parseFloat(bet.jsonBet.wager);
+
             if(bet.jsonBet.result === "W" ){
                 let win;
                 let odds = parseFloat(bet.jsonBet.odds);
-                let wager = parseFloat(bet.jsonBet.wager);
                 if(odds > 0){
                     let dec = odds/100;
                     win = wager * dec
