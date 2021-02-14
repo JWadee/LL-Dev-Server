@@ -46,9 +46,32 @@ const fetchBets= async(id) => {
 
     return(bets);
 }
+//Function to calculate winnings 
+const calcWinnings = (place, typeID, prizepool) =>{
+    let winnings = 0;
+    //winner take all
+    if(typeID === 1){
+        switch(place) {
+            case 1 :
+                winnings = prizepool;
+            break;
+        }
+    } 
+    return winnings;
+}
+
+//Function to add winnings and place
+const addPlaceAndWinnings = (leaderboards, typeID, prizepool) =>{
+    leaderboards.forEach((player, i) =>{
+        let place = i+1;
+        let winnings = calcWinnings(place, typeID, prizepool);
+        player.place = place;
+        player.winnings = winnings;
+    })
+}
 
 //Function to get W-L record and bankroll and organize leaderboards
-const formatLeaderboards = (players, bets) => { 
+const formatLeaderboards = (players, bets, typeID, prizepool) => { 
     players.forEach(player => {
         let playerBets = bets.filter( bet => bet.intContestPlayerID == player.id);
         //calculate bankroll, wins, losses, and pushes
@@ -88,18 +111,17 @@ const formatLeaderboards = (players, bets) => {
     })
 
     let ordered = players.sort((a,b) => b.bankroll - a.bankroll)
-    return ordered;
+    let final = addPlaceAndWinnings(ordered, typeID, prizepool);
+
+    return final;
 }
 
-// module.exports = formatBets;
 
-
-// Export Cron job to monitor inplay fixtures 
-const getLeaderboards = async(id) => {
+const getLeaderboards = async(id, contestTypeID, prizepool) => {
     //get players by contest id 
     let players = await fetchPlayers(id);
     let bets = await fetchBets(id);
-    let leaderboards =  formatLeaderboards(players, bets)
+    let leaderboards =  formatLeaderboards(players, bets, contestTypeID, prizepool)
     return leaderboards;
 };
   

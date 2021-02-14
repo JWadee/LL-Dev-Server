@@ -275,7 +275,7 @@ router.get('/contestLeagues/byID', function(req, res) {
 });
 
 router.get('/leaderboards', async function(req, res) { 
-  let leaderboards = await getLeaderboards(req.query.id);
+  let leaderboards = await getLeaderboards(req.query.id, req.query.contestTypeID, req.query.prizepool);
   res.send(leaderboards);
 });
 module.exports = router;
