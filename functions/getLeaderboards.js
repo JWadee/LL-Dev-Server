@@ -1,3 +1,4 @@
+const { ResumeToken } = require('mongodb');
 const cron = require('node-cron');
 const { Sequelize, DataTypes, Model} = require('sequelize');
 
@@ -68,6 +69,8 @@ const addPlaceAndWinnings = (leaderboards, typeID, prizepool) =>{
         player.place = place;
         player.winnings = winnings;
     })
+    
+    return leaderboards;
 }
 
 //Function to get W-L record and bankroll and organize leaderboards
