@@ -51,11 +51,9 @@ const fetchBets= async(id) => {
 const calcWinnings = (place, typeID, prizepool) =>{
     let winnings = 0;
     //winner take all
-    if(typeID === 1){
-        switch(place) {
-            case 1 :
-                winnings = prizepool;
-            break;
+    if(parseInt(typeID) === 1){
+        if(place == 1) {
+            winnings = parseFloat(prizepool).toFixed(2);
         }
     } 
     return winnings;
