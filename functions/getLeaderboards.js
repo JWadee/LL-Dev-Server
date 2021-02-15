@@ -1,4 +1,3 @@
-const { ResumeToken } = require('mongodb');
 const cron = require('node-cron');
 const { Sequelize, DataTypes, Model} = require('sequelize');
 
@@ -50,6 +49,7 @@ const fetchBets= async(id) => {
 //Function to calculate winnings 
 const calcWinnings = (place, typeID, prizepool) =>{
     let winnings = 0;
+
     //winner take all
     if(parseInt(typeID) === 1){
         if(place == 1) {

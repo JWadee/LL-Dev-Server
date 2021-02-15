@@ -126,7 +126,7 @@ function getMyContests(req, res){
     }
     console.log("connected as id: " + connection.threadId);
 
-    let sql = "SELECT  c.*, ct.strContestType, cp.intContestPlayerID FROM contests AS c "+ 
+    let sql = "SELECT  c.*, ct.strContestType, cp.* FROM contests AS c "+ 
               "INNER JOIN contest_players AS cp ON cp.intContestID = c.intContestID "+ 
               "INNER JOIN contest_types AS ct ON ct.intContestTypeID = c.intContestTypeID "+
               "WHERE cp.intAccountID = ?"; 
