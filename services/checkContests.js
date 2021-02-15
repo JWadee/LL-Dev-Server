@@ -34,7 +34,8 @@ const updateHistoryContests = async(contests) => {
       }else{
         record = entry.w +"-"+ entry.l
       }
-      let entrySql = "UPDATE contest_players SET intPlacement = "+entry.place+" ,decWinnings = "+entry.winnings+" ,strRecord = "+record+" ,decBankroll = "+entry.bankroll+" WHERE intContestPlayerID ="+entry.id+";";
+      console.log(record)
+      let entrySql = "UPDATE contest_players SET intPlacement = "+entry.place+" ,decWinnings = "+entry.winnings+" ,strRecord = '"+record+"' ,decBankroll = "+entry.bankroll+" WHERE intContestPlayerID ="+entry.id+";";
       sequelize.query(entrySql);
     })
   };
