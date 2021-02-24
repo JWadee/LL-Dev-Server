@@ -72,16 +72,17 @@ function createContestBets(req,res) {
             res.json({"code": 100, "status": "Error in database connection"});
             return;
         }
-
-        //get timestamp 
+        
+        //get timestamp
         let timestamp = Date.now();
+        let strTime = timestamp.toString()
         //run for each bet in array
         req.body.bets.forEach(bet => {
             //if bet type is straight insert records
             if(bet.jsonBet.type === "Straight"){
                 //insert bet record
-                let betSql ="INSERT INTO contest_bets (intContestPlayerID, jsonBet, intTimestamp) VALUES (?, ?);";
-                let betValues = [bet.contestPlayerID, JSON.stringify(bet.jsonBet), timestamp];
+                let betSql ="INSERT INTO contest_bets (intContestPlayerID, jsonBet, strTimestamp) VALUES (?, ?, ?);";
+                let betValues = [bet.contestPlayerID, JSON.stringify(bet.jsonBet), strTime];
                 connection.query(betSql, betValues, function(err, result){
                     if(err) {
                       res.json({"code": 400, "status": "Error creating new resource(s)"});
