@@ -10,7 +10,7 @@ const formatBets = (records) => {
             bet.legs = [];
             bet.legs.push(JSON.parse(record.jsonLeg));
             //check for timestamp - personal bets don't currently have that
-            if(bet.hasOwnProperty("strTimestamp") === true){
+            if(record.hasOwnProperty("strTimestamp") === true){
                 bet.timestamp = record.strTimestamp
             }
             formatted.push(bet)
