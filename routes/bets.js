@@ -12,7 +12,7 @@ function getBetsByEntry(req, res){
     }
     console.log("connected as id: " + connection.threadId);
 
-    let sql = "SELECT bets.intContestBetID, bets.jsonBet, legs.jsonLeg  FROM contest_bets AS bets "+
+    let sql = "SELECT bets.intContestBetID, bets.jsonBet, legs.jsonLeg, bets.strTimestamp  FROM contest_bets AS bets "+
               "INNER JOIN contest_bet_legs AS legs ON legs.intBetID = bets.intContestBetID "+
               "WHERE intContestPlayerID = ?;";
     
