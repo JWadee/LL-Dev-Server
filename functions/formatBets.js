@@ -6,7 +6,8 @@ const formatBets = (records) => {
     records.forEach(record => {
         const index = formatted.indexOf(bet => bet.intBet === record.intBetID);
         if(index === -1){
-            let bet = JSON.parse(record.jsonBet)
+            let bet = JSON.parse(record.jsonBet);
+            bet.id = record.intBetID;
             bet.legs = [];
             bet.legs.push(JSON.parse(record.jsonLeg));
             //check for timestamp - personal bets don't currently have that
