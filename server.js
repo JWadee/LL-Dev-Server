@@ -20,6 +20,7 @@ const contestsRouter = require('./routes/contests');
 const fixturesRouter = require('./routes/fixtures');
 const leaguesRouter = require('./routes/leagues');
 const sportsRouter = require('./routes/sports');
+const postsRouter = require('./routes/posts');
 
 const app = express();
 
@@ -61,7 +62,7 @@ app.use('/contests', contestsRouter);
 app.use('/fixtures', fixturesRouter);
 app.use('/leagues', leaguesRouter);
 app.use('/sports', sportsRouter);
-
+app.use('/posts', postsRouter);
 
 //Cron jobs 
 checkContests();
