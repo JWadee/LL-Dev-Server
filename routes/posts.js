@@ -61,8 +61,45 @@ function createPost(req,res) {
     })
 };
 
+function getAccountPosts(req, res){
+  pool.getConnection(function(err, connection){
+    if(err) {
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+      return;
+    }
+    console.log("connected as id: " + connection.threadId);
+
+    let sql = "SELECT  p.*, bets.intBetID, bets.jsonBet, legs.jsonLeg FROM posts AS p "+  
+              "INNER JOIN post_bets AS pb ON pb.intPostID = p.intPostID "+
+              "INNER JOIN personal_bets AS bets ON bets.intBetID = pb.intBetID "+
+              "INNER JOIN personal_bet_legs AS legs ON legs.intBetID = bets.intBetID "+
+              "WHERE p.intAccountID = ?;"
+    
+    let ID = req.query.ID;           
+
+    connection.query(sql, ID, function(err, row) {
+      connection.release();
+      if(!err) {
+        res.json(row)   
+      }else{
+        console.log(err)
+      }
+    });    
+    
+    connection.on('error', function(err){
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+    })
+  })
+}
+
 router.post('/create', function(req, res) { 
     createPost(req, res);
 });
   
-  module.exports = router;
+router.get('/byAccount', function(req, res) { 
+  getAccountPosts(req, res);
+});
+  
+module.exports = router;
