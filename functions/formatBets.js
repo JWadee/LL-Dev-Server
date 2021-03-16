@@ -4,7 +4,7 @@
 const formatBets = (records) => {
     const formatted = [];
     records.forEach(record => {
-        const index = formatted.indexOf(bet => bet.intBet === record.intBetID);
+        const index = formatted.indexOf(bet => bet.id === record.intBetID);
         if(index === -1){
             let bet = JSON.parse(record.jsonBet);
             bet.id = record.intBetID;

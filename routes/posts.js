@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let pool = require('../db/db');
-
+const formatPosts = require('../functions/formatPosts');
 
 
 function createPost(req,res) {
@@ -78,10 +78,11 @@ function getAccountPosts(req, res){
     
     let ID = req.query.ID;           
 
-    connection.query(sql, ID, function(err, row) {
+    connection.query(sql, ID, function(err, rows) {
       connection.release();
       if(!err) {
-        res.json(row)   
+        let posts = formatPosts(rows);
+        res.json(posts)   
       }else{
         console.log(err)
       }
@@ -99,7 +100,7 @@ router.post('/create', function(req, res) {
 });
   
 router.get('/byAccount', function(req, res) { 
-  getAccountPosts(req, res);
+    getAccountPosts(req, res);
 });
   
 module.exports = router;
