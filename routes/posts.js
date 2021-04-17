@@ -86,7 +86,6 @@ function getAccountPosts(req, res) {
       "WHERE p.intAccountID = ?;"
 
     let ID = req.query.ID;
-
     connection.query(sql, ID, function (err, rows) {
       connection.release();
       if (!err) {

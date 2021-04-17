@@ -35,8 +35,6 @@ const settleBets = (legs, fixtResults) => {
         if(leg.leg.line.type === "Spread"){
             let spread = parseFloat(leg.leg.line.line);
             if(leg.leg.line.team.type === "Home"){                    
-                console.log(homeScore + spread)
-
                 if(homeScore + spread > awayScore){
                     result = "W";                 
                 }else if(homeScore + spread === awayScore){
@@ -45,7 +43,6 @@ const settleBets = (legs, fixtResults) => {
                     result = "L";
                 }
             }else if(leg.leg.line.team.type === "Away"){
-                console.log(awayScore+spread)
                 if(awayScore + spread > homeScore){
                     result = "W";                 
                 }else if(awayScore + spread === homeScore){

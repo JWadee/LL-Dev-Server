@@ -22,9 +22,6 @@ const getFixtureByID =async(id)=>{
                 tmp.fixture = JSON.parse(obj.jsonFixture);
                 return tmp;
             })
-            // console.log("Parsed");
-            // console.log(parsed)
-
             return parsed;
         }else{
           console.log(err)

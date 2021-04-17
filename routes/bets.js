@@ -50,7 +50,6 @@ function getPersonalBets(req, res){
       connection.release();
       if(!err) {
         let formatted = formatBets(rows) 
-        console.log(formatted)
         res.json(formatted)  
 
       }else{

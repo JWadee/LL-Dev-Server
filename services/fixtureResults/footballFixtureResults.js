@@ -18,10 +18,8 @@ const checkForResults = () => {
                 console.log(err);
             }else{
                 if(row.length < 1){
-                    console.log(row)
                     addResults()
                 }else{
-                    console.log('exists')
                 }
             }
         });    
