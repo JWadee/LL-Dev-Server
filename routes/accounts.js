@@ -62,6 +62,58 @@ function getBalance(req, res){
   })
 }
 
+function checkUsername(req,res){
+  pool.getConnection(function(err, connection){
+    if(err) {
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+      return;
+    }
+    console.log("connected as id: " + connection.threadId);
+
+    let sql = "SELECT COUNT(*) AS Taken FROM accounts WHERE strUserName = ?;";
+
+    connection.query(sql, req.query.username, function(err, row) {
+      connection.release();
+      if(!err) {
+        res.json(row[0].Taken);
+      }
+    });    
+  
+    connection.on('error', function(err){
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+    })
+  })
+}
+
+function setUsername(req, res){
+  pool.getConnection(function(err, connection){
+    if(err) {
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+      return;
+    }
+    console.log("connected as id: " + connection.threadId);
+
+    let sql = "UPDATE accounts SET strUserName = ? WHERE intAccountID = ?";
+    
+    connection.query(sql, req.body.username, req.body.id, function(err, row) {
+      connection.release();
+      if(!err) {
+        res.json("success")  
+      }else{
+        console.log(err)
+      }
+    });    
+    
+    connection.on('error', function(err){
+      connection.release();
+      res.json({"code": 100, "status": "Error in database connection"});
+    })
+  })
+}
+
 router.get('/details', checkJwt, function(req, res) { 
   getDetails(req.user.sub, res);
 });
@@ -76,5 +128,16 @@ router.get('/permissions', checkJwt, function(req, res) {
 router.get('/balance', function(req, res){
   getBalance(req.query.ID, res);
 })
+
+router.get('/checkUsername', function(req, res){
+  checkUsername(req, res);
+})
+
+router.post('/setUsername', function(req, res){
+  setUsername(req, res);
+})
+
+
+
 
 module.exports = router;
