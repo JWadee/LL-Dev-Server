@@ -12,7 +12,7 @@ function getDetails(req,res){
     }
     console.log("connected as id: " + connection.threadId);
 
-    let sql = "SELECT intAccountID FROM accounts WHERE strAuthID = ?";
+    let sql = "SELECT intAccountID, strUserName FROM accounts WHERE strAuthID = ?";
     //parse Auth0 ID string to get id after "|"
     let authID = req.substring(req.indexOf("|") + 1);
 
