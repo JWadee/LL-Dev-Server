@@ -97,11 +97,12 @@ function setUsername(req, res){
     console.log("connected as id: " + connection.threadId);
 
     let sql = "UPDATE accounts SET strUserName = ? WHERE intAccountID = ?";
-    
-    connection.query(sql, req.body.username, req.body.id, function(err, row) {
+    let vals = [req.body.username, req.body.id];
+
+    connection.query(sql, vals, function(err, row) {
       connection.release();
       if(!err) {
-        res.json("success")  
+        res.json(row)  
       }else{
         console.log(err)
       }
