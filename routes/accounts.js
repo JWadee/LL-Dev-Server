@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var checkJwt = require('../services/checkJwt');
 let pool = require('../db/db');
+const formidable = require('formidable')
+const os = require('os');
+const fs = require('fs');
+const path  = require('path');
 
 function getDetails(req,res){
   pool.getConnection(function(err, connection){
@@ -113,6 +117,28 @@ function setUsername(req, res){
       res.json({"code": 100, "status": "Error in database connection"});
     })
   })
+};
+
+function setProfPic(req, res){
+  let imageFileName; 
+  let imageToBeUploaded;
+  let filePath;
+  const form = new formidable.IncomingForm()
+  form.parse(req, (err, fields, files) =>{
+    if (err) {
+      console.error('Error', err)
+      throw err
+    }
+    let oldpath = files.image.path;
+    let ext = files.image.name.split('.')[files.image.name.split('.').length - 1]
+    let filename = fields.id+"."+ext;
+    let newpath = path.join( os.homedir(),"/images/avatars/"+filename);
+    fs.rename(oldpath, newpath, function (err) {
+      if (err) throw err;
+      res.json('File uploaded and moved!');
+    });
+
+  })
 }
 
 router.get('/details', checkJwt, function(req, res) { 
@@ -138,6 +164,9 @@ router.post('/setUsername', function(req, res){
   setUsername(req, res);
 })
 
+router.post('/setProfPic', function(req, res){
+  setProfPic(req, res);
+})
 
 
 

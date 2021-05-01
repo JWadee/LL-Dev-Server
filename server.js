@@ -48,11 +48,11 @@ app.use((req, res, next) => {
 
 app.use(morgan("dev"));
 app.use(
-  bodyParser.urlencoded({
+  express.urlencoded({
     extended: false
   })
 );
-app.use(bodyParser.json());
+// app.use(express.json());
 app.use(express.static(join(__dirname, "build")));
 
 //use routes 
